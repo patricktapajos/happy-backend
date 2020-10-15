@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { getRepository } from "typeorm";
 import Orphanage from "../models/Orphanage";
+import orphanageView from "../views/orphanage_view";
+
 import * as Yup from "yup";
 export default {
   async create(request: Request, response: Response) {
@@ -29,7 +31,7 @@ export default {
       about,
       instructions,
       opening_hours,
-      open_on_weekends,
+      open_on_weekends: open_on_weekends === "true",
       images,
     };
 
@@ -62,7 +64,7 @@ export default {
       relations: ["images"],
     });
 
-    return response.json(orphanages);
+    return response.json(orphanageView.renderMany(orphanages));
   },
 
   async show(request: Request, response: Response) {
@@ -72,6 +74,6 @@ export default {
       relations: ["images"],
     });
 
-    return response.json(orphanage);
+    return response.json(orphanageView.render(orphanage));
   },
 };
